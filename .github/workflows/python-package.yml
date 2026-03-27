@@ -27,13 +27,16 @@ jobs:
     
     - name: Lint main app files
       run: |
-        # Check app.py for critical errors
+        # Check app.py for critical errors (this will fail if errors found)
         flake8 app.py --count --select=E9,F63,F7,F82 --show-source --statistics
         
-        # Check models.py if it exists (don't fail if it doesn't)
+        # Check models.py if it exists (warnings only, won't fail)
         if [ -f models.py ]; then
           flake8 models.py --count --select=E9,F63,F7,F82 --show-source --statistics || true
         fi
-        
-        # Check all Python files for warnings but don't fail
+      continue-on-error: false
+    
+    - name: Lint all files for warnings (optional)
+      run: |
+        # Check all Python files for warnings but don't fail the build
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
