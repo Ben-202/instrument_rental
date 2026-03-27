@@ -1,0 +1,9 @@
+<h2>Your Cart</h2>
+
+{% for item in items %}
+<p>{{ item.instrument }} - ₹{{ item.price }}</p>
+{% endfor %}
+
+<h3>Total: ₹{{ total }}</h3>
+
+<a href="/payment"><button>Proceed to Payment</button></a>

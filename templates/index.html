@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Rentify</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+<h2>🎵 Rentify</h2>
+<div>
+<a href="/">Home</a>
+<a href="/cart">Cart</a>
+<a href="/logout">Logout</a>
+</div>
+</nav>
+
+<section class="hero">
+<h1>Rent Musical Instruments</h1>
+<p>Keyboard • Tabla • Guitar • Piano • Drums • Flute</p>
+</section>
+
+<div class="container">
+{% for item in instruments %}
+<div class="card">
+<img src="{{ url_for('static', filename='images/' + item.image) }}">
+<h3>{{ item.name }}</h3>
+<p>₹{{ item.price }}/day</p>
+
+<form action="/add_to_cart" method="post">
+<input type="hidden" name="instrument" value="{{ item.name }}">
+<input type="hidden" name="price" value="{{ item.price }}">
+<button>Add to Cart</button>
+</form>
+
+</div>
+{% endfor %}
+</div>
+
+</body>
+</html>
