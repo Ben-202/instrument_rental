@@ -103,3 +103,7 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
     app.run(debug=True)
+
+# After db.init_app(app) and before the routes
+with app.app_context():
+    db.create_all()
