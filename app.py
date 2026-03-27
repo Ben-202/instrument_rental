@@ -12,7 +12,7 @@ app = Flask(__name__)
 database_url = os.getenv("DATABASE_URL")
 if not database_url:
     # Fallback to direct MySQL connection for Railway
-    database_url = "mysql://root:XbdnbtBRGpYmgdOdsnjxczEeicrAdBCE@crossover.proxy.rlwy.net:16158/railway"
+    database_url = "mysql+pymysql://root:XbdnbtBRGpYmgdOdsnjxczEeicrAdBCE@crossover.proxy.rlwy.net:16158/railway"
 
 app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'secret123')
