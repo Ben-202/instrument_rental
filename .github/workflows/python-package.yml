@@ -1,4 +1,4 @@
-/name: Lint Python Code
+name: Lint Python Code
 
 on:
   push:
@@ -25,18 +25,24 @@ jobs:
         pip install flake8
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     
-    - name: Lint main app files
+    - name: Check Python syntax
       run: |
-        # Check app.py for critical errors (this will fail if errors found)
+        python -m py_compile app.py
+        if [ -f models.py ]; then
+          python -m py_compile models.py
+        fi
+        echo "✅ No syntax errors found"
+    
+    - name: Lint app.py for critical errors
+      run: |
         flake8 app.py --count --select=E9,F63,F7,F82 --show-source --statistics
-        
-        # Check models.py if it exists (warnings only, won't fail)
+    
+    - name: Lint models.py (optional, won't fail)
+      run: |
         if [ -f models.py ]; then
           flake8 models.py --count --select=E9,F63,F7,F82 --show-source --statistics || true
         fi
-      continue-on-error: false
     
     - name: Lint all files for warnings (optional)
       run: |
-        # Check all Python files for warnings but don't fail the build
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
