@@ -1,10 +1,22 @@
+import os
 from flask import Flask, render_template, request, redirect, url_for
 from models import db, User, Cart
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
-app.config['SECRET_KEY'] = 'secret123'
+
+# Database configuration for Railway MySQL
+database_url = os.getenv("DATABASE_URL")
+if not database_url:
+    # Fallback to direct MySQL connection for Railway
+    database_url = "mysql://root:XbdnbtBRGpYmgdOdsnjxczEeicrAdBCE@crossover.proxy.rlwy.net:16158/railway"
+
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'secret123')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
 
@@ -91,30 +103,3 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
     app.run(debug=True)
-
-
-import os
-import pymysql
-from urllib.parse import urlparse
-
-# Get DATABASE_URL from Railway
-database_url = os.getenv("DATABASE_URL")
-
-# Parse the URL
-url = urlparse(database_url)
-
-
-
-from flask import Flask
-
-app = Flask(__name__)
-
-@app.route('/')
-def home():
-    cursor = connection.cursor()
-    cursor.execute("SELECT * FROM instruments")
-    data = cursor.fetchall()
-    return str(data)
-
-from dotenv import load_dotenv
-load_dotenv()
